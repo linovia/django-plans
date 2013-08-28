@@ -5,7 +5,6 @@ from plans.views import CreateOrderView, OrderListView, InvoiceDetailView, Accou
 
 urlpatterns = patterns('',
 
-    
     url(r'^account/$', login_required(CurrentPlanView.as_view()), name='current_plan'),
     url(r'^account/activation/$', login_required(AccountActivationView.as_view()), name='account_activation'),
 
