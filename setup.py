@@ -29,8 +29,8 @@ setup(
         'django-countries',
         'pytz',
     ],
-    extras_require = {
-        'i18n' : [
+    extras_require={
+        'i18n': [
             'django-modeltranslation>=0.5b1',
         ],
         'eu': [
