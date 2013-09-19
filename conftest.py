@@ -43,7 +43,7 @@ def pytest_configure(config):
             "issuer_country": "PL",
             "issuer_tax_number": "PL123456789",
         },
-        TAX=Decimal(23.0),
+        TAX=Decimal('23.0'),
         TAXATION_POLICY='plans.locale.eu.taxation.EUTaxationPolicy',
         TAX_COUNTRY='PL',
         CURRENCY='PLN',
