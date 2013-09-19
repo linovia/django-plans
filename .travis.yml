@@ -15,7 +15,7 @@ env:
 install:
   - pip install -e .
   - pip install pytest pytest-django-lite mock django-ordered-model vatnumber
-  - pip install -e git+https://github.com/cypreess/suds-htj.git#egg=suds
+  - pip install -e git+https://github.com/linovia/suds-htj.git#egg=suds
 
 script:
   - py.test plans
