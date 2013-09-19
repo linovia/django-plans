@@ -87,10 +87,10 @@ class UpgradePlanView(PlanTableMixin, ListView):
         queryset = super(UpgradePlanView, self).get_queryset().prefetch_related('planpricing_set__pricing', 'planquota_set__quota')
         if self.request.user.is_authenticated():
             queryset = queryset.filter(
-                            Q(available=True) & (
-                                Q(customized = self.request.user) | Q(customized__isnull=True)
-                                )
-                            )
+                Q(available=True) & (
+                    Q(customized=self.request.user) | Q(customized__isnull=True)
+                    )
+                )
         else:
             queryset = queryset.filter(Q(available=True) & Q(customized__isnull=True))
         return queryset
@@ -207,7 +207,8 @@ class CreateOrderView(CreateView):
 
         # User is not allowed to create new order for Plan when he has different Plan
         # He should use Plan Change View for this kind of action
-        if not self.request.user.userplan.is_expired() and self.request.user.userplan.plan != self.plan_pricing.plan:
+        if not self.request.user.userplan.is_expired() and \
+            self.request.user.userplan.plan != self.plan_pricing.plan:
             raise Http404
 
         self.plan = self.plan_pricing.plan
@@ -267,7 +268,9 @@ class CreateOrderPlanChangeView(CreateOrderView):
         self.pricing = None
 
     def get_policy(self):
-        policy_class = getattr(settings, 'PLAN_CHANGE_POLICY', 'plans.plan_change.StandardPlanChangePolicy')
+        policy_class = getattr(settings,
+            'PLAN_CHANGE_POLICY',
+            'plans.plan_change.StandardPlanChangePolicy')
         return import_name(policy_class)()
 
     def get_price(self):
@@ -444,4 +447,3 @@ class InvoiceDetailView(DetailView):
             return super(InvoiceDetailView, self).get_queryset()
         else:
             return super(InvoiceDetailView, self).get_queryset().filter(user=self.request.user)
-

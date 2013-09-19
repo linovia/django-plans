@@ -8,7 +8,9 @@ EMAIL_FROM = "Test <test@server.com>"
 SITE_ROOT = os.path.dirname(os.path.realpath(__file__))
 
 DEBUG = True
-TEMPLATE_DEBUG = DEBUG
+TEMPLATE_DEBUG = True
+
+INTERNAL_IPS = ['127.0.0.1']
 
 ADMINS = (
     # ('Your Name', 'your_email@example.com'),
@@ -106,6 +108,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
 )
 
 
@@ -133,7 +136,7 @@ INSTALLED_APPS = (
     # 'django_extensions',
     'plans',
     'example.foo',
-
+    'debug_toolbar',
 )
 
 # A sample logging configuration. The only tangible logging
@@ -186,3 +189,7 @@ PLAN_ACTIVATION_VALIDATORS = {
 CURRENCY = 'PLN'
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+# DEBUG_TOOLBAR_CONFIG = {
+#     'INTERCEPT_REDIRECTS': False,
+# }
