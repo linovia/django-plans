@@ -24,7 +24,6 @@ from plans.locale.eu.taxation import EUTaxationPolicy
 
 accounts_logger = logging.getLogger('accounts')
 
-# Create your models here.
 
 class Plan(OrderedModel):
     name = models.CharField(_('name'), max_length=100)
@@ -32,7 +31,7 @@ class Plan(OrderedModel):
     default = models.BooleanField(default=False, db_index=True)
     available = models.BooleanField(_('available'), default=False, db_index=True)
     created = models.DateTimeField(_('created'), db_index=True)
-    customized = models.ForeignKey('auth.User', null=True, blank=True, verbose_name=_('customized'))
+    customized = models.ForeignKey(getattr(settings, 'AUTH_USER_MODEL', 'auth.User'), null=True, blank=True, verbose_name=_('customized'))
     quotas = models.ManyToManyField('Quota', through='PlanQuota', verbose_name=_('quotas'))
     url = models.CharField(max_length=200, blank=True, help_text=_('Optional link to page with more information (for clickable pricing table headers'))
 
@@ -46,7 +45,6 @@ class Plan(OrderedModel):
             self.created = datetime.utcnow().replace(tzinfo=utc)
 
         super(Plan, self).save(*args, **kwargs)
-
 
     @classmethod
     def get_default_plan(cls):
@@ -63,7 +61,7 @@ class BillingInfo(models.Model):
     """
     Stores customer billing data needed to issue an invoice
     """
-    user = models.OneToOneField('auth.User', verbose_name=_('user'))
+    user = models.OneToOneField(getattr(settings, 'AUTH_USER_MODEL', 'auth.User'), verbose_name=_('user'))
     tax_number = models.CharField(_('VAT ID'), max_length=200, blank=True, db_index=True)
     name = models.CharField(_('name'), max_length=200, db_index=True)
     street = models.CharField(_('street'), max_length=200)
@@ -109,7 +107,7 @@ class BillingInfo(models.Model):
 #        self.tax_number = BillingInfo.clean_tax_number(self.tax_number, self.country)
 
 class UserPlan(models.Model):
-    user = models.OneToOneField('auth.User', verbose_name=_('user'))
+    user = models.OneToOneField(getattr(settings, 'AUTH_USER_MODEL', 'auth.User'), verbose_name=_('user'))
     plan = models.ForeignKey('Plan', verbose_name=_('plan'))
     expire = models.DateField(_('expire'), default=None, blank=True, null=True, db_index=True)
     active = models.BooleanField(_('active'), default=True, db_index=True)
@@ -323,7 +321,7 @@ class Order(models.Model):
 
     ])
 
-    user = models.ForeignKey('auth.User', verbose_name=_('user'))
+    user = models.ForeignKey(getattr(settings, 'AUTH_USER_MODEL', 'auth.User'), verbose_name=_('user'))
     flat_name = models.CharField(max_length=200, blank=True, null=True)
     plan = models.ForeignKey('plan', verbose_name=_('plan'), related_name="plan_order")
     pricing = models.ForeignKey('pricing', blank=True, null=True, verbose_name=_('pricing')) #if pricing is None the order is upgrade plan, not buy new pricing
@@ -451,7 +449,7 @@ class Invoice(models.Model):
         ANNUALLY = 3
 
 
-    user = models.ForeignKey('auth.User')
+    user = models.ForeignKey(getattr(settings, 'AUTH_USER_MODEL', 'auth.User'))
     order = models.ForeignKey('Order')
 
     number = models.IntegerField(db_index=True)
