@@ -15,6 +15,8 @@ env:
 
 install:
   - pip install -e .
+  - pip install -r demo/pip_dev.req
+  - pip install -r demo/pip_docs.req
 
 script:
   - py.test plans
